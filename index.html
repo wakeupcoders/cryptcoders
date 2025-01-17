@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Encryptor/Decryptor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <style>
+        body {
+            background-color: #121212; /* Dark background */
+            color: #ffffff; /* Light text color */
+        }
+        .strength {
+            height: 5px;
+            margin-top: 5px;
+        }
+        .alert {
+            background-color: #1e1e1e; /* Dark alert background */
+            color: #ffffff; /* Light alert text */
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #1e1e1e; /* Dark footer background */
+            color: #ffffff; /* Light footer text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Password Encryptor/Decryptor</h2>
+        <div class="form-group">
+            <label for="password">Enter Password:</label>
+            <input type="password" class="form-control" id="password" oninput="checkStrength()">
+            <div class="strength" id="strengthBar"></div>
+            <small id="strengthText"></small>
+        </div>
+        <div class="form-group">
+            <label for="key">Encryption Key:</label>
+            <input type="text" class="form-control" id="key">
+        </div>
+        <button class="btn btn-success" onclick="generateRandomPassword()">Generate Random Password</button>
+        <button class="btn btn-primary" onclick="encryptPassword()">Encrypt Password</button>
+        <button class="btn btn-secondary" onclick="decryptPassword()">Decrypt Password</button>
+        
+        <h4 class="mt-4">Output:</h4>
+        <div id="output" class="alert alert-info" role="alert"></div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by WakeUpCoders</p>
+    </div>
+
+    <script>
+        function checkStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            let strength = 0;
+
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[\W_]/.test(password)) strength++;
+
+            switch (strength) {
+                case 0:
+                    strengthBar.style.width = '0%';
+                    strengthBar.className = 'strength bg-danger';
+                    strengthText.innerText = 'Very Weak';
+                    break;
+                case 1:
+                    strengthBar.style.width = '25%';
+                    strengthBar.className = 'strength bg-danger';
+                    strengthText.innerText = 'Weak';
+                    break;
+                case 2:
+                    strengthBar.style.width = '50%';
+                    strengthBar.className = 'strength bg-warning';
+                    strengthText.innerText = 'Moderate';
+                    break;
+                case 3:
+                    strengthBar.style.width = '75%';
+                    strengthBar.className = 'strength bg-info';
+                    strengthText.innerText = 'Strong';
+                    break;
+                case 4:
+                    strengthBar.style.width = '100%';
+                    strengthBar.className = 'strength bg-success';
+                    strengthText.innerText = 'Very Strong';
+                    break;
+                default:
+                    strengthBar.style.width = '0%';
+                    strengthText.innerText = '';
+            }
+        }
+
+        function encryptPassword() {
+            const password = document.getElementById('password').value;
+            const key = document.getElementById('key').value;
+            const encrypted = CryptoJS.AES.encrypt(password, key).toString();
+            document.getElementById('output').innerText = `Encrypted: ${encrypted}`;
+        }
+
+        function decryptPassword() {
+            const encrypted = document.getElementById('output').innerText
