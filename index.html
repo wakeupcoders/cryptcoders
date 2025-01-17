@@ -7,26 +7,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
     <style>
-        body {
-            background-color: #121212; /* Dark background */
-            color: #ffffff; /* Light text color */
-        }
         .strength {
             height: 5px;
             margin-top: 5px;
-        }
-        .alert {
-            background-color: #1e1e1e; /* Dark alert background */
-            color: #ffffff; /* Light alert text */
-        }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            padding: 10px;
-            background-color: #1e1e1e; /* Dark footer background */
-            color: #ffffff; /* Light footer text */
         }
     </style>
 </head>
@@ -43,16 +26,11 @@
             <label for="key">Encryption Key:</label>
             <input type="text" class="form-control" id="key">
         </div>
-        <button class="btn btn-success" onclick="generateRandomPassword()">Generate Random Password</button>
         <button class="btn btn-primary" onclick="encryptPassword()">Encrypt Password</button>
         <button class="btn btn-secondary" onclick="decryptPassword()">Decrypt Password</button>
         
         <h4 class="mt-4">Output:</h4>
         <div id="output" class="alert alert-info" role="alert"></div>
-    </div>
-
-    <div class="footer">
-        <p>Powered by WakeUpCoders</p>
     </div>
 
     <script>
@@ -108,4 +86,11 @@
         }
 
         function decryptPassword() {
-            const encrypted = document.getElementById('output').innerText
+            const encrypted = document.getElementById('output').innerText.replace('Encrypted: ', '');
+            const key = document.getElementById('key').value;
+            const decrypted = CryptoJS.AES.decrypt(encrypted, key).toString(CryptoJS.enc.Utf8);
+            document.getElementById('output').innerText = `Decrypted: ${decrypted}`;
+        }
+    </script>
+</body>
+</html>
